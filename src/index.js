@@ -11,5 +11,4 @@ import './plugins/data-store';
 /**
  * Import Blocks
  */
-import './blocks/icon';
-
+import './blocks/template';
