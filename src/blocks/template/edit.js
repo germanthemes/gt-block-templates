@@ -9,7 +9,7 @@ const {
 /**
  * Internal dependencies
  */
-import { default as IconPicker } from '../../components/icon-picker';
+import { default as TemplatePicker } from '../../components/template-picker';
 
 /**
  * Block Edit Component
@@ -30,7 +30,7 @@ class TemplateEdit extends Component {
 		return (
 			<Fragment>
 				<div className={ className }>
-					<IconPicker
+					<TemplatePicker
 						icon={ icon }
 						iconSize={ 64 }
 						isSelected={ isSelected }
