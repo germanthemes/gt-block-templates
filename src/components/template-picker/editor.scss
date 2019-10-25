@@ -1,40 +1,32 @@
-/* Icon Picker Modal */
-.gt-block-templates-icon-picker-modal {
+/* Template Picker Modal */
+.gt-block-templates-template-picker-modal {
 	width: 100%;
-	max-width: 800px;
+	max-width: 1120px;
 
 	.components-modal__header-heading {
 		width: 100%;
 	}
 
-	.gt-icon-picker-title {
+	.gt-template-picker-title {
 		display: flex;
 		font-size: 1rem;
 		font-weight: bold;
 
-		.gt-remove-icon {
+		.gt-remove-template {
 			margin-left: auto;
 			margin-right: 1em;
 			color: #bc0b0b;
 		}
 	}
 
-	.gt-icon-picker-search {
-		width: 100%;
-		height: auto;
-		font-size: 16px;
-		padding: 6px 10px;
-		margin-bottom: 12px;
-	}
+	.gt-template-picker-list {
 
-	.gt-icon-picker-list {
-
-		.gt-icon-picker-grid {
+		.gt-template-picker-grid {
 			display: grid;
 			grid-gap: 4px;
 			grid-template-columns: repeat(auto-fill, minmax( 56px, 1fr ) );
 
-			.gt-icon-link {
+			.gt-template-link {
 				display: block;
 				padding: 0;
 				background: #f0f0f0;
@@ -46,11 +38,11 @@
 					cursor: pointer;
 				}
 
-				.gt-icon-svg {
+				.gt-template-svg {
 					display: inline-block;
 					padding: 16px;
 
-					.icon {
+					.template {
 						width: 24px;
 						height: 24px;
 						fill: #202020;
@@ -63,14 +55,14 @@
 	}
 }
 
-/* Icon Picker Placeholder */
-.gt-icon-placeholder-wrapper {
+/* Template Picker Placeholder */
+.gt-template-placeholder-wrapper {
 
-	.gt-icon-placeholder {
+	.gt-template-placeholder {
 		min-height: 150px;
 	}
 
-	.gt-show-icon-picker {
+	.gt-show-template-picker {
 		display: block;
 		color: inherit;
 		padding: 0;
@@ -78,7 +70,7 @@
 		text-align: inherit;
 		font-size: inherit;
 
-		.gt-icon-svg .icon {
+		.gt-template-svg .template {
 			pointer-events: none;
 		}
 

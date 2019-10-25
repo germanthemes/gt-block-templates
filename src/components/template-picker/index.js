@@ -10,7 +10,6 @@ const { Component, Fragment } = wp.element;
 const { compose } = wp.compose;
 const { __ } = wp.i18n;
 const { withSelect } = wp.data;
-const { PlainText } = wp.editor;
 
 const {
 	Button,
@@ -24,7 +23,7 @@ const {
  */
 import './editor.scss';
 
-const ICONS = [
+const TEMPLATES = [
 	'address-book', 'address-card', 'adjust', 'air-freshener', 'align-center', 'align-justify', 'align-left', 'align-right',
 ];
 
@@ -33,20 +32,19 @@ class TemplatePicker extends Component {
 		super( ...arguments );
 		this.openModal = this.openModal.bind( this );
 		this.closeModal = this.closeModal.bind( this );
-		this.searchIcon = this.searchIcon.bind( this );
 
 		this.state = {
 			isModalActive: false,
-			icons: ICONS,
+			templates: TEMPLATES,
 		};
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
 		const { isModalActive } = this.state;
 
-		// Reset icons when modal is openend.
+		// Reset templates when modal is openend.
 		if ( isModalActive && ! prevState.isModalActive ) {
-			this.setState( { icons: ICONS } );
+			this.setState( { templates: TEMPLATES } );
 		}
 	}
 
@@ -58,35 +56,35 @@ class TemplatePicker extends Component {
 		this.setState( { isModalActive: false } );
 	}
 
-	setIcon( icon ) {
+	setTemplate( template ) {
 		const { onChange } = this.props;
 
-		// Change Icon with function from parent.
-		onChange( icon );
+		// Change Template with function from parent.
+		onChange( template );
 
-		// Hide TemplatePicker after icon is selected.
+		// Hide TemplatePicker after template is selected.
 		this.closeModal();
 
-		// Reset available icons.
-		this.setState( { icons: ICONS } );
+		// Reset available templates.
+		this.setState( { templates: TEMPLATES } );
 	}
 
-	generateIconList() {
-		const icons = this.state.icons;
+	generateTemplateList() {
+		const templates = this.state.templates;
 
 		return (
-			<div className="gt-icon-picker-grid">
+			<div className="gt-template-picker-grid">
 
 				{
-					icons.map( ( icon ) => {
+					templates.map( ( template ) => {
 						return (
 							<Button
-								key={ icon }
-								className="gt-icon-link"
-								onClick={ () => this.setIcon( icon ) }
+								key={ template }
+								className="gt-template-link"
+								onClick={ () => this.setTemplate( template ) }
 							>
-								<Tooltip text={ icon }>
-									{ this.displayIcon( icon ) }
+								<Tooltip text={ template }>
+									{ this.displayTemplate( template ) }
 								</Tooltip>
 							</Button>
 						);
@@ -97,23 +95,18 @@ class TemplatePicker extends Component {
 		);
 	}
 
-	searchIcon( input ) {
-		const filtered = ICONS.filter( icon => icon.match( input.toLowerCase().trim() ) );
-		this.setState( { icons: filtered } );
-	}
-
-	displayIcon( icon, iconSize = 32 ) {
+	displayTemplate( template, templateSize = 32 ) {
 		const { pluginURL } = this.props;
 
-		const svgURL = pluginURL + 'assets/icons/fontawesome.svg#' + icon;
-		const svgClass = classnames( 'icon', `icon-${ icon }` );
+		const svgURL = pluginURL + 'assets/icons/fontawesome.svg#' + template;
+		const svgClass = classnames( 'template', `template-${ template }` );
 		const svgStyles = {
-			width: iconSize !== 32 ? iconSize + 'px' : undefined,
-			height: iconSize !== 32 ? iconSize + 'px' : undefined,
+			width: templateSize !== 32 ? templateSize + 'px' : undefined,
+			height: templateSize !== 32 ? templateSize + 'px' : undefined,
 		};
 
 		return (
-			<span className="gt-icon-svg" data-icon={ icon }>
+			<span className="gt-template-svg" data-icon={ template }>
 				<svg className={ svgClass } style={ svgStyles } aria-hidden="true" role="img">
 					<use href={ svgURL }></use>
 				</svg>
@@ -121,29 +114,29 @@ class TemplatePicker extends Component {
 		);
 	}
 
-	displayIconPlaceholder() {
+	displayTemplatePlaceholder() {
 		const {
-			icon,
-			iconClasses,
-			iconStyles,
-			iconSize,
+			template,
+			templateClasses,
+			templateStyles,
+			templateSize,
 			isSelected,
 		} = this.props;
 
 		return (
-			<div className="gt-icon-placeholder-wrapper">
+			<div className="gt-template-placeholder-wrapper">
 
-				{ ! icon ? (
+				{ ! template ? (
 
 					<Fragment>
 						<Placeholder
-							className="gt-icon-placeholder"
-							instructions={ __( 'Choose an icon here.', 'gt-block-templates' ) }
-							icon="info"
-							label={ __( 'Icon', 'gt-block-templates' ) }
+							className="gt-template-placeholder"
+							instructions={ __( 'Choose an template here.', 'gt-block-templates' ) }
+							template="info"
+							label={ __( 'Template', 'gt-block-templates' ) }
 						>
 							<Button isLarge onClick={ this.openModal }>
-								{ __( 'Select icon', 'gt-block-templates' ) }
+								{ __( 'Select template', 'gt-block-templates' ) }
 							</Button>
 						</Placeholder>
 
@@ -155,18 +148,18 @@ class TemplatePicker extends Component {
 
 						{ isSelected ? (
 
-							<Button className="gt-show-icon-picker" onClick={ this.openModal }>
-								<Tooltip text={ __( 'Edit icon', 'gt-block-templates' ) }>
-									<div className={ iconClasses } style={ iconStyles }>
-										{ this.displayIcon( icon, iconSize ) }
+							<Button className="gt-show-template-picker" onClick={ this.openModal }>
+								<Tooltip text={ __( 'Edit template', 'gt-block-templates' ) }>
+									<div className={ templateClasses } style={ templateStyles }>
+										{ this.displayTemplate( template, templateSize ) }
 									</div>
 								</Tooltip>
 							</Button>
 
 						) : (
 
-							<div className={ iconClasses } style={ iconStyles }>
-								{ this.displayIcon( icon, iconSize ) }
+							<div className={ templateClasses } style={ templateStyles }>
+								{ this.displayTemplate( template, templateSize ) }
 							</div>
 
 						) }
@@ -181,10 +174,10 @@ class TemplatePicker extends Component {
 
 	render() {
 		const title = (
-			<span className="gt-icon-picker-title">
-				{ __( 'Select Icon', 'gt-block-templates' ) }
-				<Button onClick={ () => this.setIcon( undefined ) } className="gt-remove-icon">
-					{ __( 'Remove icon', 'gt-block-templates' ) }
+			<span className="gt-template-picker-title">
+				{ __( 'Select Template', 'gt-block-templates' ) }
+				<Button onClick={ () => this.setTemplate( undefined ) } className="gt-remove-template">
+					{ __( 'Remove template', 'gt-block-templates' ) }
 				</Button>
 			</span>
 		);
@@ -192,26 +185,19 @@ class TemplatePicker extends Component {
 		return (
 			<Fragment>
 
-				{ this.displayIconPlaceholder() }
+				{ this.displayTemplatePlaceholder() }
 
 				{ this.state.isModalActive && (
 					<Modal
-						className="gt-block-templates-icon-picker-modal"
+						className="gt-block-templates-template-picker-modal"
 						title={ title }
 						closeLabel={ __( 'Close', 'gt-block-templates' ) }
 						onRequestClose={ this.closeModal }
 						focusOnMount={ false }
 					>
-						<PlainText
-							className="gt-icon-picker-search"
-							placeholder={ __( 'Search for icon', 'gt-block-templates' ) }
-							onChange={ this.searchIcon }
-							// eslint-disable-next-line jsx-a11y/no-autofocus
-							autoFocus={ true }
-						/>
 
-						<div className="gt-icon-picker-list">
-							{ this.generateIconList() }
+						<div className="gt-template-picker-list">
+							{ this.generateTemplateList() }
 						</div>
 
 					</Modal>

@@ -24,17 +24,17 @@ class TemplateEdit extends Component {
 		} = this.props;
 
 		const {
-			icon,
+			template,
 		} = attributes;
 
 		return (
 			<Fragment>
 				<div className={ className }>
 					<TemplatePicker
-						icon={ icon }
-						iconSize={ 64 }
+						template={ template }
+						templateSize={ 64 }
 						isSelected={ isSelected }
-						onChange={ ( newIcon ) => setAttributes( { icon: newIcon } ) }
+						onChange={ ( newTemplate ) => setAttributes( { template: newTemplate } ) }
 					/>
 				</div>
 			</Fragment>
