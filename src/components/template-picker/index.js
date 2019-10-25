@@ -9,7 +9,9 @@ import classnames from 'classnames';
 const { Component, Fragment } = wp.element;
 const { compose } = wp.compose;
 const { __ } = wp.i18n;
-const { withSelect } = wp.data;
+const { withSelect, dispatch } = wp.data;
+const { parse } = wp.blockSerializationDefaultParser;
+const { createBlock, rawHandler } = wp.blocks;
 
 const {
 	Button,
@@ -67,14 +69,35 @@ class TemplatePicker extends Component {
 		this.setState( { isModalActive: false } );
 	}
 
-	setTemplate( template ) {
-		const { onChange } = this.props;
+	createBlockObjects( blockData ) {
+		if ( typeof blockData !== 'undefined' && blockData.length > 0 ) {
+			return blockData.map( block => ( createBlock( block.blockName, { content: block.innerHTML, ...block.attrs }, this.createBlockObjects( block.innerBlocks ) ) ) );
+		}
 
-		// Change Template with function from parent.
-		onChange( template );
+		return [];
+	}
+
+	async insertTemplate( template ) {
+
+		// Load Block Template from json file.
+		const tmpl = await require( '../../templates/' + template.file );
+
+		// Parse Json to Block Objects.
+		const blockData = parse( tmpl.content );
+
+		console.log( blockData );
+
+		// Create Blocks.
+		const blocks = this.createBlockObjects( blockData );
+		//const blocks = rawHandler( tmpl.content );
+
+		console.log( blocks );
+
+		// Insert Blocks into Content.
+		//dispatch( 'core/editor' ).insertBlocks( blocks );
 
 		// Hide TemplatePicker after template is selected.
-		this.closeModal();
+		//this.closeModal();
 
 		// Reset available templates.
 		this.setState( { templates: TEMPLATES } );
@@ -92,7 +115,7 @@ class TemplatePicker extends Component {
 							<Button
 								key={ template.file }
 								className="gt-template-link"
-								onClick={ () => this.setTemplate( template ) }
+								onClick={ () => this.insertTemplate( template ) }
 							>
 								<Tooltip text={ template.title }>
 									{ this.displayTemplate( template ) }
