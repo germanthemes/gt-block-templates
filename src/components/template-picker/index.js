@@ -24,7 +24,18 @@ const {
 import './editor.scss';
 
 const TEMPLATES = [
-	'address-book', 'address-card', 'adjust', 'air-freshener', 'align-center', 'align-justify', 'align-left', 'align-right',
+	{
+		title: 'Homepage 1',
+		category: 'homepage',
+		image: 'address-book',
+		file: 'homepage/homepage-1.json',
+	},
+	{
+		title: 'Homepage 2',
+		category: 'homepage',
+		image: 'adjust',
+		file: 'homepage/homepage-2.json',
+	},
 ];
 
 class TemplatePicker extends Component {
@@ -79,11 +90,11 @@ class TemplatePicker extends Component {
 					templates.map( ( template ) => {
 						return (
 							<Button
-								key={ template }
+								key={ template.file }
 								className="gt-template-link"
 								onClick={ () => this.setTemplate( template ) }
 							>
-								<Tooltip text={ template }>
+								<Tooltip text={ template.title }>
 									{ this.displayTemplate( template ) }
 								</Tooltip>
 							</Button>
@@ -95,19 +106,15 @@ class TemplatePicker extends Component {
 		);
 	}
 
-	displayTemplate( template, templateSize = 32 ) {
+	displayTemplate( template ) {
 		const { pluginURL } = this.props;
 
-		const svgURL = pluginURL + 'assets/icons/fontawesome.svg#' + template;
-		const svgClass = classnames( 'template', `template-${ template }` );
-		const svgStyles = {
-			width: templateSize !== 32 ? templateSize + 'px' : undefined,
-			height: templateSize !== 32 ? templateSize + 'px' : undefined,
-		};
+		const svgURL = pluginURL + 'assets/icons/fontawesome.svg#' + template.image;
+		const svgClass = classnames( 'template', `template-${ template.image }` );
 
 		return (
-			<span className="gt-template-svg" data-icon={ template }>
-				<svg className={ svgClass } style={ svgStyles } aria-hidden="true" role="img">
+			<span className="gt-template-svg" data-icon={ template.image }>
+				<svg className={ svgClass } aria-hidden="true" role="img">
 					<use href={ svgURL }></use>
 				</svg>
 			</span>
@@ -119,7 +126,6 @@ class TemplatePicker extends Component {
 			template,
 			templateClasses,
 			templateStyles,
-			templateSize,
 			isSelected,
 		} = this.props;
 
@@ -132,7 +138,7 @@ class TemplatePicker extends Component {
 						<Placeholder
 							className="gt-template-placeholder"
 							instructions={ __( 'Choose an template here.', 'gt-block-templates' ) }
-							template="info"
+							icon="info"
 							label={ __( 'Template', 'gt-block-templates' ) }
 						>
 							<Button isLarge onClick={ this.openModal }>
@@ -151,7 +157,7 @@ class TemplatePicker extends Component {
 							<Button className="gt-show-template-picker" onClick={ this.openModal }>
 								<Tooltip text={ __( 'Edit template', 'gt-block-templates' ) }>
 									<div className={ templateClasses } style={ templateStyles }>
-										{ this.displayTemplate( template, templateSize ) }
+										{ this.displayTemplate( template ) }
 									</div>
 								</Tooltip>
 							</Button>
@@ -159,7 +165,7 @@ class TemplatePicker extends Component {
 						) : (
 
 							<div className={ templateClasses } style={ templateStyles }>
-								{ this.displayTemplate( template, templateSize ) }
+								{ this.displayTemplate( template ) }
 							</div>
 
 						) }
@@ -176,9 +182,6 @@ class TemplatePicker extends Component {
 		const title = (
 			<span className="gt-template-picker-title">
 				{ __( 'Select Template', 'gt-block-templates' ) }
-				<Button onClick={ () => this.setTemplate( undefined ) } className="gt-remove-template">
-					{ __( 'Remove template', 'gt-block-templates' ) }
-				</Button>
 			</span>
 		);
 
